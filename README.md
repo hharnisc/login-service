@@ -1,5 +1,7 @@
 # Login
 
+[![Build Status](https://travis-ci.org/hharnisc/login-service.svg?branch=master)](https://travis-ci.org/hharnisc/login-service)
+
 A login service, built on top of hharnisc/auth and hharnisc/user.
 
 ## Table Of Contents
