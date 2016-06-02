@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: login
+spec:
+  replicas: 1
+  selector:
+    role: backend
+    app: login
+    version: 0.0.1
+  template:
+    metadata:
+      labels:
+        role: backend
+        app: login
+        version: 0.0.1
+    spec:
+      containers:
+        - name: login
+          image: hharnisc/login
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
