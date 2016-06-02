@@ -4,6 +4,8 @@
 
 A login service, built on top of hharnisc/auth and hharnisc/user.
 
+**NOTE: this is a work in progress**
+
 ## Table Of Contents
 
 - [Quickstart](#quickstart)
