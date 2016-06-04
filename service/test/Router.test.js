@@ -10,6 +10,7 @@ import {
   INIT_ROUTES,
 } from '../src/symbols';
 import Router from '../src/Router';
+import logout from '../src/logout';
 
 describe('Router', () => {
   it('does exist', () => {
@@ -36,5 +37,36 @@ describe('Router', () => {
         expect(res.body).toEqual({ time });
       })
       .end(done);
+  });
+
+  describe('/logout', () => {
+    it('does handle route', (done) => {
+      const router = new Router();
+      const app = express();
+      const userId = 1;
+      const refreshToken = 'refreshToken';
+      logout.mockImplementation(() => new Promise((resolve) => resolve({
+        status: 200,
+        body: {},
+      })));
+      app.use(bodyParser.json());
+      app.use(bodyParser.urlencoded({ extended: true }));
+      app.use(router.router);
+      request(app)
+        .post('/logout')
+        .send({ userId, refreshToken })
+        .expect((res) => {
+          expect(logout)
+            .toBeCalledWith({
+              userId,
+              refreshToken,
+            });
+          expect(res.status)
+            .toEqual(200);
+          expect(res.body)
+            .toEqual({});
+        })
+        .end(done);
+    });
   });
 });

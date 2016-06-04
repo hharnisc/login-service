@@ -2,6 +2,7 @@ import express from 'express';
 import {
   INIT_ROUTES,
 } from './symbols';
+import logout from './logout';
 
 export default class Router {
   constructor() {
@@ -13,5 +14,13 @@ export default class Router {
     this.router.get('/thetime', (req, res) => res.status(200).send({
       time: Date.now(),
     }));
+
+    this.router.post('/logout', (req, res) => {
+      logout({
+        userId: req.body.userId,
+        refreshToken: req.body.refreshToken,
+      })
+        .then((response) => res.status(response.status).send(res.body));
+    });
   }
 }
