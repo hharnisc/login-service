@@ -68,5 +68,32 @@ describe('Router', () => {
         })
         .end(done);
     });
+
+    it('does handle errors', (done) => {
+      const router = new Router();
+      const app = express();
+      const userId = 1;
+      const refreshToken = 'refreshToken';
+      const error = 'some error';
+      logout.mockImplementation(() => new Promise((resolve, reject) => reject(error)));
+      app.use(bodyParser.json());
+      app.use(bodyParser.urlencoded({ extended: true }));
+      app.use(router.router);
+      request(app)
+        .post('/logout')
+        .send({ userId, refreshToken })
+        .expect((res) => {
+          expect(logout)
+            .toBeCalledWith({
+              userId,
+              refreshToken,
+            });
+          expect(res.status)
+            .toEqual(400);
+          expect(res.body)
+            .toEqual({ error });
+        })
+        .end(done);
+    });
   });
 });
