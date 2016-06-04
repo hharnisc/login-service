@@ -17,10 +17,14 @@ export default class Router {
     }));
 
     this.router.post('/logout', (req, res) => {
-      logout({
-        userId: req.body.userId,
-        refreshToken: req.body.refreshToken,
-      })
+      this[CALC_MISSING_REQ_PARAMS](req, ['userId', 'refreshToken'])
+        .then(() => (
+            logout({
+              userId: req.body.userId,
+              refreshToken: req.body.refreshToken,
+            })
+          )
+        )
         .then((response) => res.status(response.status).send(res.body))
         .catch((error) => res.status(400).send({ error }));
     });

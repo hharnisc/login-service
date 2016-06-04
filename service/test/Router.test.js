@@ -137,15 +137,27 @@ describe('Router', () => {
         .post('/logout')
         .send({ userId, refreshToken })
         .expect((res) => {
-          expect(logout)
-            .toBeCalledWith({
-              userId,
-              refreshToken,
-            });
           expect(res.status)
             .toEqual(400);
           expect(res.body)
             .toEqual({ error });
+        })
+        .end(done);
+    });
+
+    it('does handle missing params on /create route', (done) => {
+      const error = 'Missing Param(s): userId, refreshToken';
+      logout.mockImplementation(() => new Promise((resolve) => resolve()));
+      const router = new Router();
+      const app = express();
+      app.use(bodyParser.json());
+      app.use(bodyParser.urlencoded({ extended: true }));
+      app.use(router.router);
+      request(app)
+        .post('/logout')
+        .expect((res) => {
+          expect(res.status).toEqual(400);
+          expect(res.body).toEqual({ error });
         })
         .end(done);
     });
