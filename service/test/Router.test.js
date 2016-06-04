@@ -8,6 +8,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import {
   INIT_ROUTES,
+  CALC_MISSING_REQ_PARAMS,
 } from '../src/symbols';
 import Router from '../src/Router';
 import logout from '../src/logout';
@@ -37,6 +38,59 @@ describe('Router', () => {
         expect(res.body).toEqual({ time });
       })
       .end(done);
+  });
+
+  describe('CALC_MISSING_REQ_PARAMS', () => {
+    it('exists', () => {
+      const router = new Router();
+      expect(router[CALC_MISSING_REQ_PARAMS]).toBeDefined();
+    });
+
+    it('does calculate missing request params', (done) => {
+      const params = ['userId'];
+      const error = `Missing Param(s): ${params.join(',')}`;
+      const router = new Router();
+      const req = {
+        body: {},
+      };
+      router[CALC_MISSING_REQ_PARAMS](req, params)
+        .catch((actualError) => {
+          expect(actualError).toEqual(error);
+          done();
+        });
+    });
+
+    it('does calculate some missing request params', (done) => {
+      const userId = 1;
+      const params = ['userId', 'another thing'];
+      const error = `Missing Param(s): ${params.slice(1, 2).join(',')}`;
+      const router = new Router();
+      const req = {
+        body: {
+          userId,
+        },
+      };
+      router[CALC_MISSING_REQ_PARAMS](req, params)
+        .catch((actualError) => {
+          expect(actualError).toEqual(error);
+          done();
+        });
+    });
+
+    it('does calculate no missing request params', (done) => {
+      const userId = 1;
+      const password = 'password';
+      const params = ['userId', 'password'];
+      const router = new Router();
+      const req = {
+        body: {
+          userId,
+          password,
+        },
+      };
+      router[CALC_MISSING_REQ_PARAMS](req, params)
+        .then(() => done());
+    });
   });
 
   describe('/logout', () => {
