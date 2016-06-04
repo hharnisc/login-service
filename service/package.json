@@ -4,9 +4,10 @@
   "description": "A login service, built on top of hharnisc/auth and hharnisc/user.",
   "main": "./lib/index.js",
   "dependencies": {
-    "minimist": "^1.1.3",
-    "express": "^4.13.3",
     "body-parser": "^1.13.3",
+    "express": "^4.13.3",
+    "minimist": "^1.1.3",
+    "request-retry-promise": "0.0.1",
     "winston": "^1.0.1",
     "winston-express-middleware": "^0.1.0",
     "winston-logstash": "^0.2.11"
@@ -40,7 +41,9 @@
     "type": "git",
     "url": "https://github.com/hharnisc"
   },
-  "keywords": ["service,login"],
+  "keywords": [
+    "service,login"
+  ],
   "author": {
     "name": "Harrison Harnisch",
     "email": "hharnisc@gmail.com",
