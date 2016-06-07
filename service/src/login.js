@@ -28,7 +28,6 @@ const login = (options = {}) => {
             email,
             provider,
             providerInfo,
-            roles,
           },
         });
       }
