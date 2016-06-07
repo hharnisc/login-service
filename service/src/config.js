@@ -3,3 +3,9 @@ export const auth = {
   host: 'auth',
   version: 'v1',
 };
+
+export const userConfig = {
+  proto: 'http',
+  host: 'user',
+  version: 'v1',
+};

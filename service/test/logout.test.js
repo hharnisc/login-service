@@ -1,8 +1,8 @@
 jest.unmock('../src/logout');
 jest.unmock('../src/config');
 jest.mock('request-retry-promise');
-import logout from '../src/logout';
 import requestRetryPromise from 'request-retry-promise';
+import logout from '../src/logout';
 import { auth } from '../src/config';
 
 describe('logout', () => {

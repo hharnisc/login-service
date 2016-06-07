@@ -1,5 +1,5 @@
 jest.unmock('../src/config');
-import { auth } from '../src/config';
+import { auth, userConfig } from '../src/config';
 
 describe('config', () => {
   describe('auth', () => {
@@ -8,6 +8,17 @@ describe('config', () => {
         .toEqual({
           proto: 'http',
           host: 'auth',
+          version: 'v1',
+        });
+    });
+  });
+
+  describe('userConfig', () => {
+    it('returns expected config', () => {
+      expect(userConfig)
+        .toEqual({
+          proto: 'http',
+          host: 'user',
           version: 'v1',
         });
     });
