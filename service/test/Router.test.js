@@ -12,6 +12,7 @@ import {
 } from '../src/symbols';
 import Router from '../src/Router';
 import logout from '../src/logout';
+import login from '../src/login';
 
 describe('Router', () => {
   it('does exist', () => {
@@ -158,6 +159,54 @@ describe('Router', () => {
         .expect((res) => {
           expect(res.status).toEqual(400);
           expect(res.body).toEqual({ error });
+        })
+        .end(done);
+    });
+  });
+
+  describe('/login', () => {
+    it('does handle route', (done) => {
+      const router = new Router();
+      const app = express();
+      const email = 'test@test.com';
+      const provider = 'google';
+      const providerInfo = {
+        scope: ['email'],
+      };
+      const roles = ['admin'];
+      const user = {
+        email,
+        provider,
+        providerInfo,
+        roles,
+      };
+      const token = {
+        accessToken: 'accessToken',
+        refreshToken: 'refreshToken',
+        expireTime: 100,
+      };
+      login.mockImplementation(() => new Promise((resolve) => resolve({
+        status: 200,
+        body: token,
+      })));
+      app.use(bodyParser.json());
+      app.use(bodyParser.urlencoded({ extended: true }));
+      app.use(router.router);
+      request(app)
+        .post('/login')
+        .send(user)
+        .expect((res) => {
+          expect(login)
+            .toBeCalledWith({
+              email,
+              provider,
+              providerInfo,
+              roles,
+            });
+          expect(res.status)
+            .toEqual(200);
+          expect(res.body)
+            .toEqual(token);
         })
         .end(done);
     });

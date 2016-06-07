@@ -4,6 +4,7 @@ import {
   CALC_MISSING_REQ_PARAMS,
 } from './symbols';
 import logout from './logout';
+import login from './login';
 
 export default class Router {
   constructor() {
@@ -25,8 +26,18 @@ export default class Router {
             })
           )
         )
-        .then((response) => res.status(response.status).send(res.body))
+        .then((response) => res.status(response.status).send(response.body))
         .catch((error) => res.status(400).send({ error }));
+    });
+
+    this.router.post('/login', (req, res) => {
+      login({
+        email: req.body.email,
+        provider: req.body.provider,
+        providerInfo: req.body.providerInfo,
+        roles: req.body.roles,
+      })
+        .then((response) => res.status(200).send(response.body));
     });
   }
 
