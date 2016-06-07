@@ -210,5 +210,37 @@ describe('Router', () => {
         })
         .end(done);
     });
+
+    it('does handle errors', (done) => {
+      const router = new Router();
+      const app = express();
+      const email = 'test@test.com';
+      const provider = 'google';
+      const providerInfo = {
+        scope: ['email'],
+      };
+      const roles = ['admin'];
+      const user = {
+        email,
+        provider,
+        providerInfo,
+        roles,
+      };
+      const error = 'some error';
+      login.mockImplementation(() => new Promise((resolve, reject) => reject(error)));
+      app.use(bodyParser.json());
+      app.use(bodyParser.urlencoded({ extended: true }));
+      app.use(router.router);
+      request(app)
+        .post('/login')
+        .send(user)
+        .expect((res) => {
+          expect(res.status)
+            .toEqual(400);
+          expect(res.body)
+            .toEqual({ error });
+        })
+        .end(done);
+    });
   });
 });

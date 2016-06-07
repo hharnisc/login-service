@@ -37,7 +37,8 @@ export default class Router {
         providerInfo: req.body.providerInfo,
         roles: req.body.roles,
       })
-        .then((response) => res.status(200).send(response.body));
+        .then((response) => res.status(200).send(response.body))
+        .catch((error) => res.status(400).send({ error }));
     });
   }
 
