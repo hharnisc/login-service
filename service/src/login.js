@@ -10,6 +10,7 @@ const login = (options = {}) => {
   } = options;
   const userGetUri = `${userConfig.proto}://${userConfig.host}/${userConfig.version}/get`;
   const userCreateUri = `${userConfig.proto}://${userConfig.host}/${userConfig.version}/create`;
+  const userUpdateUri = `${userConfig.proto}://${userConfig.host}/${userConfig.version}/update`;
   const authUri = `${auth.proto}://${auth.host}/${auth.version}/create`;
   return requestRetryPromise({
     uri: userGetUri,
@@ -17,8 +18,21 @@ const login = (options = {}) => {
       email,
     },
   })
-    .then(() => (
-      requestRetryPromise({
+    .then((response) => response.body)
+    .then((user) => {
+      if (user) {
+        return requestRetryPromise({
+          uri: userUpdateUri,
+          body: {
+            id: user.id,
+            email,
+            provider,
+            providerInfo,
+            roles,
+          },
+        });
+      }
+      return requestRetryPromise({
         uri: userCreateUri,
         body: {
           email,
@@ -26,8 +40,9 @@ const login = (options = {}) => {
           providerInfo,
           roles,
         },
-      })
-    ))
+      });
+    })
+    .then((response) => response.body)
     .then((user) => (
       requestRetryPromise({
         uri: authUri,
@@ -36,8 +51,10 @@ const login = (options = {}) => {
         },
       })
     ))
-    .then((token) => token.body)
-    .catch((error) => new Error(error));
+    .then((response) => response.body)
+    .catch((error) => {
+      throw new Error(error.message);
+    });
 };
 
 export default login;

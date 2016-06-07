@@ -15,12 +15,14 @@ const authReject = () => (
 );
 
 const userGet = (email) => (
-  new Promise((resolve) => {
+  new Promise((resolve, reject) => {
     if (email === 'null@test.com') {
       resolve({
         status: 200,
         body: null,
       });
+    } else if (email === 'reject@test.com') {
+      reject(Error('error while getting user'));
     } else {
       resolve({
         status: 200,
@@ -32,7 +34,19 @@ const userGet = (email) => (
 
 const userCreate = (user) => (
   new Promise((resolve) => {
-    resolve(Object.assign({}, user, { id: 1 }));
+    resolve({
+      status: 200,
+      body: Object.assign({}, user, { id: 1 }),
+    });
+  })
+);
+
+const userUpdate = (user) => (
+  new Promise((resolve) => {
+    resolve({
+      status: 200,
+      body: user,
+    });
   })
 );
 
@@ -54,9 +68,11 @@ requestRetryPromise.default.mockImplementation((options = {}) => {
     case `${auth.proto}://${auth.host}/${auth.version}/reject`:
       return authReject();
     case `${userConfig.proto}://${userConfig.host}/${userConfig.version}/get`:
-      return userGet(options.body);
+      return userGet(options.body.email);
     case `${userConfig.proto}://${userConfig.host}/${userConfig.version}/create`:
       return userCreate(options.body);
+    case `${userConfig.proto}://${userConfig.host}/${userConfig.version}/update`:
+      return userUpdate(options.body);
     case `${auth.proto}://${auth.host}/${auth.version}/create`:
       return authCreate();
     default:
