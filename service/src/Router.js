@@ -20,23 +20,25 @@ export default class Router {
     this.router.post('/logout', (req, res) => {
       this[CALC_MISSING_REQ_PARAMS](req, ['userId', 'refreshToken'])
         .then(() => (
-            logout({
-              userId: req.body.userId,
-              refreshToken: req.body.refreshToken,
-            })
-          )
-        )
+          logout({
+            userId: req.body.userId,
+            refreshToken: req.body.refreshToken,
+          })
+        ))
         .then((response) => res.status(response.status).send(response.body))
         .catch((error) => res.status(400).send({ error }));
     });
 
     this.router.post('/login', (req, res) => {
-      login({
-        email: req.body.email,
-        provider: req.body.provider,
-        providerInfo: req.body.providerInfo,
-        roles: req.body.roles,
-      })
+      this[CALC_MISSING_REQ_PARAMS](req, ['email', 'provider', 'providerInfo'])
+        .then(() => (
+          login({
+            email: req.body.email,
+            provider: req.body.provider,
+            providerInfo: req.body.providerInfo,
+            roles: req.body.roles,
+          })
+        ))
         .then((response) => res.status(200).send(response.body))
         .catch((error) => res.status(400).send({ error }));
     });
