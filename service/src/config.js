@@ -1,8 +1,8 @@
-export const auth = {
+export const authConfig = {
   proto: 'http',
   host: 'auth',
   version: 'v1',
-  port: '9090',
+  port: '8080',
 };
 
 export const userConfig = {

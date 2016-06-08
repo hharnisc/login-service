@@ -3,7 +3,7 @@ jest.unmock('../src/config');
 jest.mock('request-retry-promise');
 import requestRetryPromise from 'request-retry-promise';
 import logout from '../src/logout';
-import { auth } from '../src/config';
+import { authConfig } from '../src/config';
 
 describe('logout', () => {
   it('exists', () => {
@@ -14,7 +14,7 @@ describe('logout', () => {
   pit('does logout a user with a token', () => {
     const userId = 1;
     const refreshToken = 'refreshToken';
-    const uri = `${auth.proto}://${auth.host}:${auth.port}/${auth.version}/reject`;
+    const uri = `${authConfig.proto}://${authConfig.host}:${authConfig.port}/${authConfig.version}/reject`;
     const body = {
       userId,
       refreshToken,

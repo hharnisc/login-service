@@ -23,7 +23,7 @@ services:
     links:
       - rethinkdb
     expose:
-      - "9090"
+      - "8080"
   user:
     image: hharnisc/user
     environment:

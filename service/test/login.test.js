@@ -3,7 +3,7 @@ jest.unmock('../src/config');
 jest.mock('request-retry-promise');
 import requestRetryPromise from 'request-retry-promise';
 import login from '../src/login';
-import { auth, userConfig } from '../src/config';
+import { authConfig, userConfig } from '../src/config';
 
 describe('login', () => {
   it('exists', () => {
@@ -33,7 +33,7 @@ describe('login', () => {
     const userGetBody = { email };
     const userCreateUri = `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/create`;
     const userCreateBody = user;
-    const authUri = `${auth.proto}://${auth.host}:${auth.port}/${auth.version}/create`;
+    const authUri = `${authConfig.proto}://${authConfig.host}:${authConfig.port}/${authConfig.version}/create`;
     const authBody = { userId };
     const expectedResponse = {
       statusCode: 200,
@@ -88,7 +88,7 @@ describe('login', () => {
     const userGetBody = { email };
     const userUpdateUri = `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/update`;
     const userUpdateBody = Object.assign({}, user, { userId, roles: undefined });
-    const authUri = `${auth.proto}://${auth.host}:${auth.port}/${auth.version}/create`;
+    const authUri = `${authConfig.proto}://${authConfig.host}:${authConfig.port}/${authConfig.version}/create`;
     const authBody = { userId };
     const expectedResponse = {
       statusCode: 200,

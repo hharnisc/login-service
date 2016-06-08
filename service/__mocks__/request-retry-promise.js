@@ -1,4 +1,4 @@
-import { auth, userConfig } from '../src/config';
+import { authConfig, userConfig } from '../src/config';
 jest.autoMockOff();
 require.requireActual('bluebird');
 const requestRetryPromise = jest.genMockFromModule('request-retry-promise');
@@ -65,7 +65,7 @@ const authCreate = () => (
 
 requestRetryPromise.default.mockImplementation((options = {}) => {
   switch (options.uri) {
-    case `${auth.proto}://${auth.host}:${auth.port}/${auth.version}/reject`:
+    case `${authConfig.proto}://${authConfig.host}:${authConfig.port}/${authConfig.version}/reject`:
       return authReject();
     case `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/get`:
       return userGet(options.body.email);
@@ -73,7 +73,7 @@ requestRetryPromise.default.mockImplementation((options = {}) => {
       return userCreate(options.body);
     case `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/update`:
       return userUpdate(options.body);
-    case `${auth.proto}://${auth.host}:${auth.port}/${auth.version}/create`:
+    case `${authConfig.proto}://${authConfig.host}:${authConfig.port}/${authConfig.version}/create`:
       return authCreate();
     default:
       return new Promise((resolve) => resolve());

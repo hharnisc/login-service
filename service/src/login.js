@@ -1,5 +1,5 @@
 import requestRetryPromise from 'request-retry-promise';
-import { auth, userConfig } from './config';
+import { authConfig, userConfig } from './config';
 
 const login = (options = {}) => {
   const {
@@ -11,7 +11,7 @@ const login = (options = {}) => {
   const userGetUri = `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/get`;
   const userCreateUri = `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/create`;
   const userUpdateUri = `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/update`;
-  const authUri = `${auth.proto}://${auth.host}:${auth.port}/${auth.version}/create`;
+  const authConfigUri = `${authConfig.proto}://${authConfig.host}:${authConfig.port}/${authConfig.version}/create`;
   return requestRetryPromise({
     uri: userGetUri,
     body: {
@@ -47,7 +47,7 @@ const login = (options = {}) => {
     .then((user) => (
       requestRetryPromise({
         method: 'POST',
-        uri: authUri,
+        uri: authConfigUri,
         body: {
           userId: user.id,
         },
