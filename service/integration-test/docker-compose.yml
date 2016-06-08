@@ -3,6 +3,8 @@ version: '2'
 services:
   integration-tester:
     build: .
+    environment:
+      - JWT_SECRET=secret
     links:
       - login
   login:

@@ -8,7 +8,7 @@ jest.autoMockOn();
 const authReject = () => (
   new Promise((resolve) => (
     resolve({
-      status: 200,
+      statusCode: 200,
       body: {},
     })
   ))
@@ -18,14 +18,14 @@ const userGet = (email) => (
   new Promise((resolve, reject) => {
     if (email === 'null@test.com') {
       resolve({
-        status: 200,
+        statusCode: 200,
         body: null,
       });
     } else if (email === 'reject@test.com') {
       reject(Error('error while getting user'));
     } else {
       resolve({
-        status: 200,
+        statusCode: 200,
         body: { id: 1 },
       });
     }
@@ -35,7 +35,7 @@ const userGet = (email) => (
 const userCreate = (user) => (
   new Promise((resolve) => {
     resolve({
-      status: 200,
+      statusCode: 200,
       body: Object.assign({}, user, { id: 1 }),
     });
   })
@@ -44,8 +44,8 @@ const userCreate = (user) => (
 const userUpdate = (user) => (
   new Promise((resolve) => {
     resolve({
-      status: 200,
-      body: user,
+      statusCode: 200,
+      body: Object.assign({}, user, { id: 1 }),
     });
   })
 );
@@ -53,7 +53,7 @@ const userUpdate = (user) => (
 const authCreate = () => (
   new Promise((resolve) => {
     resolve({
-      status: 200,
+      statusCode: 200,
       body: {
         accessToken: 'accessToken',
         refreshToken: 'refreshToken',

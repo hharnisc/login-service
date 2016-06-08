@@ -20,7 +20,7 @@ describe('logout', () => {
       refreshToken,
     };
     const expectedResponse = {
-      status: 200,
+      statusCode: 200,
       body: {},
     };
     return logout({ userId, refreshToken })

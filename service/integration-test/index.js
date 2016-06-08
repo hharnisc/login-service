@@ -1,5 +1,6 @@
 import test from 'tape';
 import tapSpec from 'tap-spec';
+import jwt from 'jsonwebtoken';
 import requestPromise from 'request-promise';
 import retryPromise from 'retry-promise';
 import rethinkdb from 'rethinkdb';
@@ -39,6 +40,7 @@ const tableConfig = [
   'users',
   'sessions',
 ];
+const secret = process.env.JWT_SECRET;
 
 const connectDB = () => (
   rethinkdb.init(config, tableConfig)
@@ -145,6 +147,57 @@ test('POST /v1/logout', (t) => {
         .run(connection)
         .then((value) => {
           t.equal(value, 0, 'refresh token removed from db');
+        })
+    ))
+    .catch((error) => t.fail(error))
+    .then(() => resetDB())
+    .then(() => t.end());
+});
+
+test('POST /v1/login - existing user', (t) => {
+  populateDB()
+    .then(() => (
+      requestPromise({
+        method: 'POST',
+        uri: `http://${host}:${port}/v1/login`,
+        body: {
+          email: userData.email,
+          provider: 'twitter',
+          providerInfo: userData.providers.twitter,
+          roles: userData.roles,
+        },
+        json: true,
+        resolveWithFullResponse: true,
+      })
+    ))
+    .then((response) => {
+      t.equal(response.statusCode, 200, 'statusCode: 200');
+      t.deepEqual(
+        Object.keys(response.body).sort(),
+        ['accessToken', 'expireTime', 'refreshToken'],
+        'response has expected keys'
+      );
+      return new Promise((resolve, reject) => {
+        jwt.verify(response.body.accessToken, secret, (err, decoded) => {
+          if (err) {
+            reject(err);
+          } else {
+            t.equal(decoded.userId, userId, 'token has expected payload');
+            t.deepEqual(decoded.roles, userData.roles, 'token has expected roles in payload');
+            resolve(response.body.refreshToken);
+          }
+        });
+      });
+    }).then((testRefreshToken) => (
+      rethinkdb.table('sessions')
+        .filter({
+          userId,
+          refreshToken: testRefreshToken,
+        })
+        .count()
+        .run(connection)
+        .then((value) => {
+          t.equal(value, 1, 'refresh token stored in db');
         })
     ))
     .catch((error) => t.fail(error))

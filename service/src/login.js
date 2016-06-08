@@ -22,9 +22,10 @@ const login = (options = {}) => {
     .then((user) => {
       if (user) {
         return requestRetryPromise({
+          method: 'POST',
           uri: userUpdateUri,
           body: {
-            id: user.id,
+            userId: user.id,
             email,
             provider,
             providerInfo,
@@ -32,6 +33,7 @@ const login = (options = {}) => {
         });
       }
       return requestRetryPromise({
+        method: 'POST',
         uri: userCreateUri,
         body: {
           email,
@@ -44,13 +46,13 @@ const login = (options = {}) => {
     .then((response) => response.body)
     .then((user) => (
       requestRetryPromise({
+        method: 'POST',
         uri: authUri,
         body: {
           userId: user.id,
         },
       })
     ))
-    .then((response) => response.body)
     .catch((error) => {
       throw new Error(error.message);
     });
