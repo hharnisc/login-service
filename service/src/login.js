@@ -8,10 +8,10 @@ const login = (options = {}) => {
     providerInfo,
     roles,
   } = options;
-  const userGetUri = `${userConfig.proto}://${userConfig.host}/${userConfig.version}/get`;
-  const userCreateUri = `${userConfig.proto}://${userConfig.host}/${userConfig.version}/create`;
-  const userUpdateUri = `${userConfig.proto}://${userConfig.host}/${userConfig.version}/update`;
-  const authUri = `${auth.proto}://${auth.host}/${auth.version}/create`;
+  const userGetUri = `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/get`;
+  const userCreateUri = `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/create`;
+  const userUpdateUri = `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/update`;
+  const authUri = `${auth.proto}://${auth.host}:${auth.port}/${auth.version}/create`;
   return requestRetryPromise({
     uri: userGetUri,
     body: {

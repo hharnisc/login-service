@@ -29,11 +29,11 @@ describe('login', () => {
       providerInfo,
       roles,
     };
-    const userGetUri = `${userConfig.proto}://${userConfig.host}/${userConfig.version}/get`;
+    const userGetUri = `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/get`;
     const userGetBody = { email };
-    const userCreateUri = `${userConfig.proto}://${userConfig.host}/${userConfig.version}/create`;
+    const userCreateUri = `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/create`;
     const userCreateBody = user;
-    const authUri = `${auth.proto}://${auth.host}/${auth.version}/create`;
+    const authUri = `${auth.proto}://${auth.host}:${auth.port}/${auth.version}/create`;
     const authBody = { userId };
     const expectedResponse = {
       accessToken: 'accessToken',
@@ -76,11 +76,11 @@ describe('login', () => {
       providerInfo,
       roles,
     };
-    const userGetUri = `${userConfig.proto}://${userConfig.host}/${userConfig.version}/get`;
+    const userGetUri = `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/get`;
     const userGetBody = { email };
-    const userUpdateUri = `${userConfig.proto}://${userConfig.host}/${userConfig.version}/update`;
+    const userUpdateUri = `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/update`;
     const userUpdateBody = Object.assign({}, user, { id: userId, roles: undefined });
-    const authUri = `${auth.proto}://${auth.host}/${auth.version}/create`;
+    const authUri = `${auth.proto}://${auth.host}:${auth.port}/${auth.version}/create`;
     const authBody = { userId };
     const expectedResponse = {
       accessToken: 'accessToken',

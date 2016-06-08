@@ -67,13 +67,13 @@ requestRetryPromise.default.mockImplementation((options = {}) => {
   switch (options.uri) {
     case `${auth.proto}://${auth.host}:${auth.port}/${auth.version}/reject`:
       return authReject();
-    case `${userConfig.proto}://${userConfig.host}/${userConfig.version}/get`:
+    case `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/get`:
       return userGet(options.body.email);
-    case `${userConfig.proto}://${userConfig.host}/${userConfig.version}/create`:
+    case `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/create`:
       return userCreate(options.body);
-    case `${userConfig.proto}://${userConfig.host}/${userConfig.version}/update`:
+    case `${userConfig.proto}://${userConfig.host}:${userConfig.port}/${userConfig.version}/update`:
       return userUpdate(options.body);
-    case `${auth.proto}://${auth.host}/${auth.version}/create`:
+    case `${auth.proto}://${auth.host}:${auth.port}/${auth.version}/create`:
       return authCreate();
     default:
       return new Promise((resolve) => resolve());
