@@ -38,9 +38,12 @@ describe('login', () => {
     const expectedResponse = {
       statusCode: 200,
       body: {
-        accessToken: 'accessToken',
-        refreshToken: 'refreshToken',
-        expireTime: 100,
+        token: {
+          accessToken: 'accessToken',
+          refreshToken: 'refreshToken',
+          expireTime: 100,
+        },
+        user: Object.assign({}, user, { id: userId }),
       },
     };
     return login(user)
@@ -90,9 +93,12 @@ describe('login', () => {
     const expectedResponse = {
       statusCode: 200,
       body: {
-        accessToken: 'accessToken',
-        refreshToken: 'refreshToken',
-        expireTime: 100,
+        token: {
+          accessToken: 'accessToken',
+          refreshToken: 'refreshToken',
+          expireTime: 100,
+        },
+        user: Object.assign({}, user, { id: userId }),
       },
     };
     return login(user)

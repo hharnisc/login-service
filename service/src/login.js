@@ -52,6 +52,12 @@ const login = (options = {}) => {
           userId: user.id,
         },
       })
+      .then((response) => (Object.assign({}, response, {
+        body: {
+          user,
+          token: response.body,
+        },
+      })))
     ))
     .catch((error) => {
       throw new Error(error.message);

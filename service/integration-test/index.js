@@ -174,17 +174,22 @@ test('POST /v1/login - existing user', (t) => {
       t.equal(response.statusCode, 200, 'statusCode: 200');
       t.deepEqual(
         Object.keys(response.body).sort(),
-        ['accessToken', 'expireTime', 'refreshToken'],
+        ['token', 'user'],
         'response has expected keys'
       );
+      t.deepEqual(
+        response.body.user,
+        Object.assign({}, userData, { id: userId }),
+        'response body has expected user'
+      );
       return new Promise((resolve, reject) => {
-        jwt.verify(response.body.accessToken, secret, (err, decoded) => {
+        jwt.verify(response.body.token.accessToken, secret, (err, decoded) => {
           if (err) {
             reject(err);
           } else {
             t.equal(decoded.userId, userId, 'token has expected payload');
             t.deepEqual(decoded.roles, userData.roles, 'token has expected roles in payload');
-            resolve(response.body.refreshToken);
+            resolve(response.body.token.refreshToken);
           }
         });
       });

@@ -45,7 +45,7 @@ const userUpdate = (user) => (
   new Promise((resolve) => {
     resolve({
       statusCode: 200,
-      body: Object.assign({}, user, { id: 1 }),
+      body: Object.assign({}, user, { id: 1, userId: undefined }, { roles: ['admin'] }),
     });
   })
 );
