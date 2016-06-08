@@ -65,7 +65,7 @@ const authCreate = () => (
 
 requestRetryPromise.default.mockImplementation((options = {}) => {
   switch (options.uri) {
-    case `${auth.proto}://${auth.host}/${auth.version}/reject`:
+    case `${auth.proto}://${auth.host}:${auth.port}/${auth.version}/reject`:
       return authReject();
     case `${userConfig.proto}://${userConfig.host}/${userConfig.version}/get`:
       return userGet(options.body.email);

@@ -8,6 +8,7 @@ describe('config', () => {
         .toEqual({
           proto: 'http',
           host: 'auth',
+          port: '9090',
           version: 'v1',
         });
     });
@@ -19,6 +20,7 @@ describe('config', () => {
         .toEqual({
           proto: 'http',
           host: 'user',
+          port: '8080',
           version: 'v1',
         });
     });

@@ -49,7 +49,7 @@ describe('Router', () => {
 
     it('does calculate missing request params', (done) => {
       const params = ['userId'];
-      const error = `Missing Param(s): ${params.join(',')}`;
+      const error = Error(`Missing Param(s): ${params.join(',')}`);
       const router = new Router();
       const req = {
         body: {},
@@ -64,7 +64,7 @@ describe('Router', () => {
     it('does calculate some missing request params', (done) => {
       const userId = 1;
       const params = ['userId', 'another thing'];
-      const error = `Missing Param(s): ${params.slice(1, 2).join(',')}`;
+      const error = Error(`Missing Param(s): ${params.slice(1, 2).join(',')}`);
       const router = new Router();
       const req = {
         body: {
@@ -130,7 +130,7 @@ describe('Router', () => {
       const userId = 1;
       const refreshToken = 'refreshToken';
       const error = 'some error';
-      logout.mockImplementation(() => new Promise((resolve, reject) => reject(error)));
+      logout.mockImplementation(() => new Promise((resolve, reject) => reject(Error(error))));
       app.use(bodyParser.json());
       app.use(bodyParser.urlencoded({ extended: true }));
       app.use(router.router);
@@ -227,7 +227,7 @@ describe('Router', () => {
         roles,
       };
       const error = 'some error';
-      login.mockImplementation(() => new Promise((resolve, reject) => reject(error)));
+      login.mockImplementation(() => new Promise((resolve, reject) => reject(Error(error))));
       app.use(bodyParser.json());
       app.use(bodyParser.urlencoded({ extended: true }));
       app.use(router.router);

@@ -25,8 +25,8 @@ export default class Router {
             refreshToken: req.body.refreshToken,
           })
         ))
-        .then((response) => res.status(response.status).send(response.body))
-        .catch((error) => res.status(400).send({ error }));
+        .then((response) => res.status(200).send(response.body))
+        .catch((error) => res.status(400).send({ error: error.message }));
     });
 
     this.router.post('/login', (req, res) => {
@@ -40,7 +40,7 @@ export default class Router {
           })
         ))
         .then((response) => res.status(200).send(response.body))
-        .catch((error) => res.status(400).send({ error }));
+        .catch((error) => res.status(400).send({ error: error.message }));
     });
   }
 
@@ -53,7 +53,7 @@ export default class Router {
         return true;
       });
       if (missingParams.length) {
-        reject(`Missing Param(s): ${missingParams.join(', ')}`);
+        reject(Error(`Missing Param(s): ${missingParams.join(', ')}`));
       } else {
         resolve();
       }

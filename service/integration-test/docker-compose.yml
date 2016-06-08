@@ -1,8 +1,37 @@
-integration-tester:
-  build: .
-  links:
-    - login
-login:
-  build: ../..
-  ports:
-    - "8080:8080"
+version: '2'
+
+services:
+  integration-tester:
+    build: .
+    links:
+      - login
+  login:
+    build: ../..
+    links:
+      - auth
+      - user
+    expose:
+      - "8080"
+  auth:
+    image: hharnisc/auth
+    environment:
+      - RETHINKDB_SERVICE_HOST=rethinkdb
+      - RETHINKDB_SERVICE_PORT=28015
+      - JWT_SECRET=secret
+    links:
+      - rethinkdb
+    expose:
+      - "9090"
+  user:
+    image: hharnisc/user
+    environment:
+      - RETHINKDB_SERVICE_HOST=rethinkdb
+      - RETHINKDB_SERVICE_PORT=28015
+    links:
+      - rethinkdb
+    expose:
+      - "8080"
+  rethinkdb:
+    image: rethinkdb
+    expose:
+      - "28015"

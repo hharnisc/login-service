@@ -14,7 +14,7 @@ describe('logout', () => {
   pit('does logout a user with a token', () => {
     const userId = 1;
     const refreshToken = 'refreshToken';
-    const uri = `${auth.proto}://${auth.host}/${auth.version}/reject`;
+    const uri = `${auth.proto}://${auth.host}:${auth.port}/${auth.version}/reject`;
     const body = {
       userId,
       refreshToken,
@@ -27,6 +27,7 @@ describe('logout', () => {
       .then((response) => {
         expect(requestRetryPromise)
           .toBeCalledWith({
+            method: 'POST',
             uri,
             body,
           });
