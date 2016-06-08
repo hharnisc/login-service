@@ -210,6 +210,81 @@ test('POST /v1/login - existing user', (t) => {
     .then(() => t.end());
 });
 
+test('POST /v1/login - new user', (t) => {
+  const email = 'another@test.com';
+  const providers = {
+    google: userData.providers.twitter,
+  };
+  const roles = userData.roles;
+  populateDB()
+    .then(() => (
+      requestPromise({
+        method: 'POST',
+        uri: `http://${host}:${port}/v1/login`,
+        body: {
+          email: 'another@test.com',
+          provider: 'google',
+          providerInfo: userData.providers.twitter,
+          roles: userData.roles,
+        },
+        json: true,
+        resolveWithFullResponse: true,
+      })
+    ))
+    .then((response) => {
+      t.equal(response.statusCode, 200, 'statusCode: 200');
+      t.deepEqual(
+        Object.keys(response.body).sort(),
+        ['token', 'user'],
+        'response has expected keys'
+      );
+      t.deepEqual(
+        Object.assign({}, response.body.user, { id: 'random' }),
+        {
+          id: 'random',
+          email,
+          emails: [email],
+          providers,
+          roles,
+        },
+        'response body has expected user'
+      );
+      return new Promise((resolve, reject) => {
+        jwt.verify(response.body.token.accessToken, secret, (err, decoded) => {
+          if (err) {
+            reject(err);
+          } else {
+            t.equal(
+              decoded.userId,
+              response.body.user.id,
+              'token has expected payload'
+            );
+            t.deepEqual(
+              decoded.roles,
+              response.body.user.roles,
+              'token has expected roles in payload'
+            );
+            resolve(response);
+          }
+        });
+      });
+    }).then((response) => (
+      rethinkdb.table('sessions')
+        .filter({
+          userId: response.body.user.id,
+          refreshToken: response.body.token.refreshToken,
+        })
+        .count()
+        .run(connection)
+        .then((value) => {
+          t.equal(value, 1, 'refresh token stored in db');
+        })
+    ))
+    .catch((error) => t.fail(error))
+    .then(() => resetDB())
+    .then(() => t.end());
+});
+
 after('after', (t) => {
   disconnectDB();
   t.pass('Disconnected from DB');
