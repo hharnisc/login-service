@@ -13,6 +13,8 @@ A login service, built on top of hharnisc/auth and hharnisc/user.
 - [Running Locally](#running-locally)
 - [Deploy Locally](#deploy-locally)
 - [Deploy To Production](#deploy-to-production)
+- [User Object](#user-object)
+- [Auth Token](#auth-token)
 - [API](#api)
 
 ## Quickstart
@@ -107,6 +109,32 @@ Follow [Quickstart](#quickstart) instructions
 
 TODO
 
+## User Object
+
+```json
+{
+  "id": "1",
+  "email": "someone@xyz.com",
+  "emails": ["someoneelse@xyz.com", "someone@xyz.com"],
+  "providers": {
+    "google": {
+      /* google provider data*/
+    }
+  },
+  "roles": ["read", "write", "sudo"]
+}
+```
+
+## Auth Token
+
+```json
+{
+  "accessToken": "some.access.token",
+  "refreshToken": "some.refreshToken",
+  "expireTime": 1465994137309
+}
+```
+
 ## API
 
 ### GET /health
@@ -121,14 +149,33 @@ No parameters
 
 200 - Empty
 
-### GET /v1/thetime
+### GET /v1/login
 
-Get a unix timestamp
+Login a user. Creates or updates a user (keyed off of email address) and returns the full user object with a session token to make requests against internal apis.
 
 #### request
 
-No parameters
+- **email** - *email address** - the user's email address
+- **provider** - *string* - the source where the user was authenticated
+- **providerInfo** - *object* - any metadata to store from the source
+- **roles** - *[string]* - a list of roles associated with the user
+
+**Note** roles are only set on the first time the user is seen
 
 #### response
 
-- **time** - *unix timestamp* - current time
+- **user** - *object* - complete user object see [User Object](#user-object)
+- **token** - *object* - auth token see [Auth Token](#auth-token)
+
+### GET /v1/logout
+
+Logout a user. Rejects the refresh token for a user so it can't be used to create new access tokens.
+
+#### request
+
+- **userId** - *email address** - user id
+- **refreshToken** - *string* - persistent token used to generate an `accessToken`
+
+#### response
+
+200 - Empty
