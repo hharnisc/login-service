@@ -21,4 +21,4 @@ app.use(`/${argv.apiVersion}`, router.router);
 app.use('/', healthRouter);
 app.use(errorLogger);
 app.listen(argv.port);
-logger.info(`Auth service started on port ${argv.port}`);
+logger.info(`Login service started on port ${argv.port}`);

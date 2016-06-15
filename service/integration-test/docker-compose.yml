@@ -9,6 +9,7 @@ services:
       - login
   login:
     build: ../..
+    command: npm start
     links:
       - auth
       - user
@@ -16,6 +17,7 @@ services:
       - "8080"
   auth:
     image: hharnisc/auth
+    command: npm start
     environment:
       - RETHINKDB_SERVICE_HOST=rethinkdb
       - RETHINKDB_SERVICE_PORT=28015
@@ -26,6 +28,7 @@ services:
       - "8080"
   user:
     image: hharnisc/user
+    command: npm start
     environment:
       - RETHINKDB_SERVICE_HOST=rethinkdb
       - RETHINKDB_SERVICE_PORT=28015
