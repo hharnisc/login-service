@@ -24,23 +24,6 @@ describe('Router', () => {
     expect(router[INIT_ROUTES]).toBeDefined();
   });
 
-  it('does handle /thetime route', (done) => {
-    const router = new Router();
-    const app = express();
-    const time = 1300;
-    Date.now = jest.fn().mockReturnValue(time);
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(router.router);
-    request(app)
-      .get('/thetime')
-      .expect((res) => {
-        expect(res.status).toEqual(200);
-        expect(res.body).toEqual({ time });
-      })
-      .end(done);
-  });
-
   describe('CALC_MISSING_REQ_PARAMS', () => {
     it('exists', () => {
       const router = new Router();

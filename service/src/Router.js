@@ -13,10 +13,6 @@ export default class Router {
   }
 
   [INIT_ROUTES]() {
-    this.router.get('/thetime', (req, res) => res.status(200).send({
-      time: Date.now(),
-    }));
-
     this.router.post('/logout', (req, res) => {
       this[CALC_MISSING_REQ_PARAMS](req, ['userId', 'refreshToken'])
         .then(() => (

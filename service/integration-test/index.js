@@ -104,25 +104,6 @@ before('before', (t) => {
     .catch((error) => t.fail(error));
 });
 
-test('GET /v1/thetime', (t) => {
-  requestPromise({
-    method: 'GET',
-    uri: `http://${host}:${port}/v1/thetime`,
-    json: true,
-    resolveWithFullResponse: true,
-  })
-    .then((response) => {
-      t.equal(response.statusCode, 200, 'has statusCode 200');
-      t.deepEqual(
-        Object.keys(response.body).sort(),
-        ['time'],
-        'response has expected keys'
-      );
-      t.end();
-    })
-    .catch((error) => t.fail(error));
-});
-
 test('POST /v1/logout', (t) => {
   populateDB()
     .then(() => (
