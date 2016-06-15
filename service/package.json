@@ -7,7 +7,7 @@
     "body-parser": "^1.13.3",
     "express": "^4.13.3",
     "minimist": "^1.1.3",
-    "request-retry-promise": "0.0.1",
+    "request-retry-promise": "0.0.2",
     "winston": "^1.0.1",
     "winston-express-middleware": "^0.1.0",
     "winston-logstash": "^0.2.11"
