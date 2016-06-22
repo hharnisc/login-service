@@ -14,6 +14,7 @@ test.createStream()
 const before = test;
 const after = test;
 
+const createdAt = Date.now();
 const userData = {
   email: 'test@test.com',
   emails: ['test@test.com'],
@@ -23,6 +24,8 @@ const userData = {
     },
   },
   roles: ['read'],
+  createdAt,
+  updatedAt: createdAt,
 };
 
 let connection;
@@ -89,14 +92,15 @@ before('before', (t) => {
       uri: `http://${host}:${port}/health`,
       json: true,
       resolveWithFullResponse: true,
-    }).then((response) => {
-      if (response.statusCode !== 200) {
-        throw new Error('Health Check Failed');
-      }
-    });
+    })
+      .then((response) => {
+        if (response.statusCode !== 200) {
+          throw new Error('Health Check Failed');
+        }
+      })
+      .then(() => connectDB());
   };
-  return retryPromise({ max: 5, backoff: 5000 }, healthCheck)
-    .then(() => connectDB())
+  return retryPromise({ max: 5, backoff: 10000 }, healthCheck)
     .then(() => {
       t.pass('Connect To SUT and Database');
       t.end();
@@ -159,9 +163,28 @@ test('POST /v1/login - existing user', (t) => {
         'response has expected keys'
       );
       t.deepEqual(
-        response.body.user,
-        Object.assign({}, userData, { id: userId }),
+        Object.assign(
+          {},
+          response.body.user,
+          {
+            createdAt: undefined,
+            updatedAt: undefined,
+          }
+        ),
+        Object.assign(
+          {},
+          userData,
+          {
+            id: userId,
+            createdAt: undefined,
+            updatedAt: undefined,
+          }),
         'response body has expected user'
+      );
+      t.equal(
+        response.body.user.createdAt < response.body.user.updatedAt,
+        true,
+        'createdAt < updatedAt'
       );
       return new Promise((resolve, reject) => {
         jwt.verify(response.body.token.accessToken, secret, (err, decoded) => {
@@ -220,15 +243,31 @@ test('POST /v1/login - new user', (t) => {
         'response has expected keys'
       );
       t.deepEqual(
-        Object.assign({}, response.body.user, { id: 'random' }),
+        Object.assign(
+          {},
+          response.body.user,
+          {
+            id: 'random',
+            createdAt: undefined,
+            updatedAt: undefined,
+          }
+        ),
         {
           id: 'random',
           email,
           emails: [email],
           providers,
           roles,
+          createdAt: undefined,
+          updatedAt: undefined,
         },
         'response body has expected user'
+      );
+      t.notEqual(response.body.user.createdAt, undefined, 'createdAt is defined');
+      t.equal(
+        response.body.user.createdAt,
+        response.body.user.updatedAt,
+        'createdAt === updatedAt'
       );
       return new Promise((resolve, reject) => {
         jwt.verify(response.body.token.accessToken, secret, (err, decoded) => {
